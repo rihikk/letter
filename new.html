@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Click to Open Letter</title>
+    <style>
+        /* Sets up the centered layout and background */
+        body {
+            display: grid;
+            place-items: center;
+            min-height: 100vh;
+            background-color: #fcebe3;
+            font-family: Arial, sans-serif;
+            /* This gives the 3D effect to the flap */
+            perspective: 1000px; 
+        }
+
+        /* The main container for the envelope and its animations */
+        .envelope-wrapper {
+            position: relative;
+            /* --- CHANGED DIMENSIONS --- */
+            width: 400px;
+            height: 250px;
+            cursor: pointer;
+            /* This transition applies to the "open" state movement */
+            transition: transform 0.6s ease;
+        }
+
+        /* The front face of the envelope */
+        .envelope {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #e9a5a5;
+            border-radius: 5px;
+            /* Sits on top of the letter, but below the flap */
+            z-index: 2;
+            /* A subtle shadow to look like the front of an envelope */
+            box-shadow: 
+                0 0 10px rgba(0,0,0,0.1),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+        }
+
+        /* The envelope flap, created with the border-trick */
+        .flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            
+            /* --- ADJUSTED FLAP DIMENSIONS --- */
+            /* Creates the triangle shape */
+            border-top: 130px solid #d98989; /* Darker flap color */
+            border-left: 200px solid transparent; /* Half of new width */
+            border-right: 200px solid transparent; /* Half of new width */
+            
+
+            z-index: 3;
+            
+            transform-origin: top;
+            transition: transform 0.6s ease;
+        }
+
+        .letter-paper {
+            position: absolute;
+            top: 0;
+            left: 5%;
+            width: 90%;
+            height: 95%;
+            background: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 10px 20px; 
+            box-sizing: border-box; 
+            z-index: 1;
+            
+            transform: translateY(0);
+            transition: transform 0.6s ease, z-index 0.6s;
+            
+            font-family: 'Georgia', serif;
+            color: #333;
+            line-height: 1.6;
+            font-size: 18px;
+        }
+
+        .letter-paper h2 {
+            font-family: 'Brush Script MT', 'Brush Script Std', cursive;
+            font-size: 32px; /* Larger font */
+            color: #d98989;
+            margin-top: 0;
+        }
+
+        .letter-paper .signature {
+            font-style: italic;
+            text-align: right;
+            color: #555;
+        }
+
+        /* --- THE OPEN STATE --- */
+
+        .envelope-wrapper.open {
+            /* Moves down slightly less relative to its new size */
+            transform: translateY(50px);
+        }
+
+        .envelope-wrapper.open .flap {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+
+        /* 3. The letter slides up and comes to the front */
+        .envelope-wrapper.open .letter-paper {
+            /* --- ADJUSTED SLIDE DISTANCE --- */
+            transform: translateY(-200px);
+            /* Comes in front of everything */
+            z-index: 4;
+        }
+
+        /* Helper text */
+        .click-info {
+            margin-top: 20px;
+            color: #999;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="envelope-wrapper" id="envelope">
+        <div class="letter-paper">
+            <h2>My Love,</h2>
+            <p>There's too much to say, but you already know how I feel about you and nothing can change it, and i will end this letter with a comma cuz i don't want a stop in our story....</p>
+        </div>
+        <div class="envelope"></div>
+        <div class="flap"></div>
+    </div>
+
+
+    <script>
+        // Wait for the document to be fully loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // Get the envelope and the info text
+            const envelope = document.getElementById('envelope');
+            const clickInfo = document.getElementById('clickInfo');
+
+            // Add a click event listener to the envelope
+            envelope.addEventListener('click', () => {
+                // Toggle the 'open' class on the envelope
+                envelope.classList.toggle('open');
+                
+                // Hide the "click me" text after the first click
+                if (clickInfo) {
+                    clickInfo.style.display = 'none';
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
